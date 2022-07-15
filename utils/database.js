@@ -51,7 +51,21 @@ export async function getAccount() {
             return value;
         }
     } else {
-
+        return [{"title": "\u5434\u59d0\u59d0\u8bb2\u5386\u53f2\u6545\u4e8b\u7b2c4\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u5434\u59d0\u59d0\u8bb2\u5386\u53f2\u6545\u4e8b\u7b2c15\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u5434\u59d0\u59d0\u8bb2\u5386\u53f2\u6545\u4e8b\u7b2c5\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u4e2d\u56fd\u795e\u8bdd\u6545\u4e8b\u96c6\u4e0a\u53e4\u65f6\u4ee3\u5377", "author": "\u8881\u73c2", "publisher": "\u4e2d\u56fd\u5c11\u5e74\u513f\u7ae5\u51fa\u7248\u793e", "isbn": "9787514852370", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u5434\u59d0\u59d0\u8bb2\u5386\u53f2\u6545\u4e8b\u7b2c8\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u5434\u59d0\u59d0\u8bb2\u5386\u53f2\u6545\u4e8b\u7b2c9\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u5434\u59d0\u59d0\u8bb2\u6545\u4e8b\u7b2c2\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u4e2d\u56fd\u795e\u8bdd\u6545\u4e8b\u96c6", "author": "\u8881\u73c2", "publisher": "\u4e2d\u56fd\u5c11\u5e74\u513f\u7ae5\u51fa\u7248\u793e", "isbn": "9787514852363", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u5434\u59d0\u59d0\u8bb2\u6545\u4e8b\u7b2c14\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u5434\u59d0\u59d0\u8bb2\u6545\u4e8b\u7b2c7\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u5434\u59d0\u59d0\u8bb2\u6545\u4e8b\u7b2c3\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u5434\u59d0\u59d0\u8bb2\u6545\u4e8b\u7b2c6\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u5434\u59d0\u59d0\u8bb2\u6545\u4e8b\u7b2c15\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        {"title": "\u5434\u59d0\u59d0\u8bb2\u6545\u4e8b\u7b2c11\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
+        ]
     }
 }
 
@@ -64,5 +78,25 @@ export async function getBooks() {
             let data = await allCollectionsData(database, "bookData");
             console.log(data);
         }
+    }
+}
+
+export async function createAccount(wxName) {
+    if (useDatabase) {
+        let newAccount = {
+            openId: "",
+            wxName: wxName,
+            booksBorrowed: [],
+        };
+        databaseCache.account = newAccount;
+        let res = await wx.cloud.callFunction({
+            name: "createAccount",
+            data: {
+                wxName: wxName,
+            }
+        });
+        console.log(res);
+    } else {
+        // TODO
     }
 }

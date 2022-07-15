@@ -1,0 +1,6 @@
+<view id="login-page-master-container">
+    <view id="login-page-title-container">
+        <text class="title">欢迎来到久牵图书馆</text>
+    </view>
+    <view id="login-page-button" bindtap="getUserName">开始借书</view>
+</view>

@@ -13,19 +13,28 @@ Page({
     },
     async onLoad() {
         wx.cloud.init();
-        let limit = await getBookLimit();
         let quotes = await getQuotes();
+        getBookLimit().then((val) => {
+            this.setData({
+                bookBorrowedLimit: val,
+            });
+        })
+        getQuotes().then((val) => {
+            this.setData({
+                footerInspirationText: val,
+            });
+        })
         this.setData({
             username: "Michel",
             generalTimeOfDayDescription: getGeneralTimeOfDayDescription(),
-            bookBorrowedLimit: limit,
-            footerInspirationText: quotes,
         });
 
         // check for account
         let account = await getAccount();
         if (account === null) {
-            // create account
+            wx.redirectTo({
+              url: '/pages/loginPage/loginPage',
+            })
         }
         console.log(account);
         getBooks();
