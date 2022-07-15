@@ -1,0 +1,122 @@
+#main-container {
+    min-height: 100vh;
+    display: flex;
+    padding-top: 18px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 53px;
+    background-color: #F2F1F6;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    align-items: center;
+}
+#main-top-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+#main-header {
+    margin-bottom: 25px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.title {
+    font-size: 34px;
+    font-weight: 700;
+}
+#main-code-scan-icon {
+    width: 41px;
+    height: 41px;
+    border-radius: 20.5px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#main-code-scan-icon-img {
+    width: 20.31px;
+    height: 20.31px;
+}
+.search {
+    width: 100%;
+    display: flex;
+    height: 36px;
+    background-color: #E4E3E9;
+    border-radius: 10px;
+    flex-direction: row;
+    align-items: center;
+}
+.search-icon {
+    width: 15.63px;
+    height: 15.78px;
+    margin-left: 8.4px;
+    margin-right: 5.97px;
+}
+.search-input {
+    flex-grow: 1;
+    margin-right: 6px;
+}
+.main-search-input-placeholder-style {
+    color: #959599;
+}
+#borrowed-book-list {
+    margin-top: 23px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+.header {
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 30px;
+}
+#borrowed-book-content-list {
+    margin-top: 8px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.book-item {
+    padding: 8.5px 16px;
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+}
+.book-item-left {
+    display: flex;
+    flex-direction: column;
+}
+.book-item-author {
+    color: #898989;
+}
+.book-item-right {
+    display: flex;
+    align-items: center;
+}
+.warn-book-overtime {
+    color: #FF3B30;
+    font-weight: 500;
+    margin-right: 6px;
+}
+.list-chevron-right {
+    width: 13px;
+    height: 22px;
+}
+.book-list-separator {
+    width: calc(100%-16px);
+    height: 0.5px;
+    margin-left: 16px;
+    background-color: #D8D8D8;
+}
+#footer-text {
+    color: #9B9B9B;
+    font-size: 15px;
+}

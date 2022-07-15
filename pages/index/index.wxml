@@ -1,0 +1,35 @@
+<view id="main-container">
+    <view id="main-top-content">
+        <view id="main-header">
+            <text class="title">{{generalTimeOfDayDescription}}好，来看书吧！</text>
+            <view id="main-code-scan-icon">
+                <image id="main-code-scan-icon-img" src="/icons/code-icon.svg" />
+            </view>
+        </view>
+        <view class="search">
+            <image class="search-icon" src="/icons/search-icon.svg" />
+            <input class="search-input" placeholder="搜索" placeholder-class="search-input-placeholder"/>
+        </view>
+        <view id="borrowed-book-list">
+            <text class="header">您借了 {{borrowedBookList.length}}/{{bookBorrowedLimit}} 个书</text>
+            <view id="borrowed-book-content-list">
+                <block wx:for="{{borrowedBookList}}">
+                    <view wx:if="{{index !== 0}}" class="book-list-separator"></view>
+                    <view class="book-item">
+                        <view class="book-item-left">
+                            <text class="book-item-title">{{item.title}}</text>
+                            <text class="book-item-author">{{item.author}}</text>
+                        </view>
+                        <view class="book-item-right">
+                            <text class="warn-book-overtime" wx:if="{{item.isOvertimeValue === true}}">记得还书！</text>
+                            <image class="list-chevron-right" src="/icons/chevron-right.svg" />
+                        </view>
+                    </view>
+                </block>
+            </view>
+        </view>
+    </view>
+    <view id="footer">
+        <text id="footer-text">{{footerInspirationText}}</text>
+    </view>
+</view>
