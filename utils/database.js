@@ -39,13 +39,14 @@ export async function getAccount() {
         } else {
             let value;
             let database = wx.cloud.database();
-            let account = await database.collection("userData").where({
-                openId: "{openid}",
-            }).get();
-            if (account.data.length === 0) {
+            let account = await wx.cloud.callFunction({
+                name: "getAccount",
+            });
+            // console.log(account);
+            if (account.result.res === undefined) {
                 value = null;
             } else {
-                value = account.data[0];
+                value = account.result.res;
             }
             databaseCache.account = value;
             return value;
@@ -69,6 +70,31 @@ export async function getAccount() {
     }
 }
 
+export async function getAccountCached() {
+    if (useDatabase) {
+        return databaseCache.account;
+    }
+}
+
+export async function getBooksCached() {
+    if (useDatabase) {
+        return databaseCache.books;
+    }
+}
+
+let booksCache = Object();
+export async function buildBooksCache() {
+    booksCache = Object();
+    let books = await getBooks();
+    for (let i=0;i<books.length;i++) {
+        booksCache[books[i]._id] = books[i];
+    }
+}
+
+export function getBook(_id) {
+    return booksCache[_id];
+}
+
 export async function getBooks() {
     if (useDatabase) {
         if (databaseCache.books !== undefined) {
@@ -76,7 +102,10 @@ export async function getBooks() {
         } else {
             let database = wx.cloud.database();
             let data = await allCollectionsData(database, "bookData");
-            console.log(data);
+            let res = data.data;
+            databaseCache.books = res;
+            buildBooksCache();
+            return res;
         }
     }
 }
@@ -88,14 +117,15 @@ export async function createAccount(wxName) {
             wxName: wxName,
             booksBorrowed: [],
         };
-        databaseCache.account = newAccount;
         let res = await wx.cloud.callFunction({
             name: "createAccount",
             data: {
                 wxName: wxName,
             }
         });
-        console.log(res);
+        databaseCache.account = newAccount;
+        newAccount._id = res.result.res;
+        return;
     } else {
         // TODO
     }

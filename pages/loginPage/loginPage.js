@@ -19,11 +19,15 @@ Component({
      * 组件的方法列表
      */
     methods: {
-        getUserName: function() {
+        getUserName: async function() {
             wx.getUserProfile({
                 desc: '用于记录您的名字',
                 success: (res) => {
-                    createAccount(res.userInfo);
+                    createAccount(res.userInfo.nickName).then( () => {
+                        wx.redirectTo({
+                          url: '/pages/index/index',
+                        })
+                    });
                 }
             });
         }

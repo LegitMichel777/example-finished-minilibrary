@@ -1,6 +1,7 @@
-import {Book} from "../../classes/Book"
+import { Book } from "../../classes/Book"
 import { getGeneralTimeOfDayDescription } from "../../utils/util";
-import { getAccount, getBookLimit, getBooks, getQuotes } from "../../utils/database";
+import { getAccount, getAccountCached, getBook, getBookLimit, getBooks, getBooksCached, getQuotes } from "../../utils/database";
+import { searchBooks } from "../../utils/search";
 const app = getApp()
 
 Page({
@@ -9,7 +10,45 @@ Page({
         generalTimeOfDayDescription: "",
         bookBorrowedLimit: 0,
         footerInspirationText: "",
-        borrowedBookList: []
+        borrowedBookList: [],
+        searchFocused: false,
+        searchText: "",
+    },
+    async generateBorrowedBookList() {
+        let books = await getBooksCached();
+        let account = await getAccountCached();
+        if (books === undefined || account === undefined) {
+            return
+        }
+        let booksBorrowed = account.booksBorrowed;
+        let borrowedBookList = [];
+        for (let i=0;i<booksBorrowed.length;i++) {
+            borrowedBookList.push(getBook(booksBorrowed[i]));
+        }
+        this.setData({
+            borrowedBookList: borrowedBookList,
+        });
+    },
+    searchInput(x) {
+        let value = x.detail.value;
+        this.setData({
+            searchText: value,
+        });
+        searchBooks(value).then((res) =>{
+            this.setData({
+                searchBookList: res,
+            });
+        });
+    },
+    searchFocus() {
+        this.setData({
+            searchFocused: true,
+        });
+    },
+    searchBlur() {
+        this.setData({
+            searchFocused: false,
+        });
     },
     async onLoad() {
         wx.cloud.init();
@@ -30,18 +69,17 @@ Page({
         });
 
         // check for account
-        let account = await getAccount();
-        if (account === null) {
-            wx.redirectTo({
-              url: '/pages/loginPage/loginPage',
-            })
-        }
-        console.log(account);
-        getBooks();
-
-        let borrowedBookList = [new Book("id", "isbn", "title", "author", "publisher", "borrowedUser", 0), new Book("id2", "isbn2", "title2", "author2", "publisher2"), new Book("id3", "isbn3", "title3", "author3", "publisher3")];
-        this.setData({
-            borrowedBookList: borrowedBookList,
+        getAccount().then((account) => {
+            if (account === null) {
+                wx.redirectTo({
+                    url: '/pages/loginPage/loginPage',
+                })
+            } else {
+                this.generateBorrowedBookList();
+            }
         });
+        getBooks().then(() => {
+            this.generateBorrowedBookList();
+        })
     },
 })

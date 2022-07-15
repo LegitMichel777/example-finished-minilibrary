@@ -8,12 +8,31 @@
         </view>
         <view class="search">
             <image class="search-icon" src="/icons/search-icon.svg" />
-            <input class="search-input" placeholder="搜索" placeholder-class="search-input-placeholder"/>
+            <input class="search-input" placeholder="搜索" value="{{searchText}}" placeholder-class="search-input-placeholder" bindinput="searchInput" bindfocus="searchFocus" bindblur="searchBlur" />
         </view>
-        <view id="borrowed-book-list">
-            <text class="header">您借了 {{borrowedBookList.length}}/{{bookBorrowedLimit}} 个书</text>
-            <view id="borrowed-book-content-list">
-                <block wx:for="{{borrowedBookList}}">
+        <block wx:if="{{searchFocused === false}}">
+            <view id="borrowed-book-list">
+                <text class="header">您借了 {{borrowedBookList.length}}/{{bookBorrowedLimit}} 个书</text>
+                <view class="book-content-list">
+                    <block wx:for="{{borrowedBookList}}">
+                        <view wx:if="{{index !== 0}}" class="book-list-separator"></view>
+                        <view class="book-item">
+                            <view class="book-item-left">
+                                <text class="book-item-title">{{item.title}}</text>
+                                <text class="book-item-author">{{item.author}}</text>
+                            </view>
+                            <view class="book-item-right">
+                                <text class="warn-book-overtime" wx:if="{{item.isOvertimeValue === true}}">记得还书！</text>
+                                <image class="list-chevron-right" src="/icons/chevron-right.svg" />
+                            </view>
+                        </view>
+                    </block>
+                </view>
+            </view>
+        </block>
+        <block wx:if="{{searchFocused === true}}">
+            <view class="book-content-list">
+                <block wx:for="{{searchBookList}}">
                     <view wx:if="{{index !== 0}}" class="book-list-separator"></view>
                     <view class="book-item">
                         <view class="book-item-left">
@@ -27,7 +46,7 @@
                     </view>
                 </block>
             </view>
-        </view>
+        </block>
     </view>
     <view id="footer">
         <text id="footer-text">{{footerInspirationText}}</text>
