@@ -1,5 +1,5 @@
 #main-container {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     padding-top: 18px;
     padding-left: 16px;
@@ -115,4 +115,16 @@
 #footer-text {
     color: #9B9B9B;
     font-size: 15px;
+}
+#search-book-list {
+    margin-top: 17px;
+    margin-bottom: 42px;
+    flex-grow: 1;
+    background-color: white;
+    border-radius: 10px;
+    height: calc(100vh - 260px);
+}
+.book-owner {
+    margin-right: 11px;
+    color: #959599;
 }

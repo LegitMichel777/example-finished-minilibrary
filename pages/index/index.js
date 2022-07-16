@@ -6,11 +6,12 @@ const app = getApp()
 
 Page({
     data: {
-        username: "",
+        account: null,
         generalTimeOfDayDescription: "",
         bookBorrowedLimit: 0,
         footerInspirationText: "",
         borrowedBookList: [],
+        searchBookList: [],
         searchFocused: false,
         searchText: "",
     },
@@ -29,30 +30,54 @@ Page({
             borrowedBookList: borrowedBookList,
         });
     },
-    searchInput(x) {
-        let value = x.detail.value;
-        this.setData({
-            searchText: value,
-        });
-        searchBooks(value).then((res) =>{
+    updateSearch() {
+        searchBooks(this.data.searchText).then((res) =>{
             this.setData({
                 searchBookList: res,
             });
         });
     },
+    searchInput(x) {
+        let value = x.detail.value;
+        this.setData({
+            searchText: value,
+        });
+        console.log(this.data.searchText);
+        this.updateSearch();
+    },
     searchFocus() {
         this.setData({
             searchFocused: true,
         });
+        this.updateSearch();
     },
     searchBlur() {
-        this.setData({
-            searchFocused: false,
-        });
+        if (this.data.searchText === "") {
+            this.setData({
+                searchFocused: false,
+            });
+        }
+    },
+    gotoBookDetail(book) {
+        wx.navigateTo({
+            url: "/pages/detail/detail",
+            success: (res) => {
+                res.eventChannel.emit("book", book);
+                res.eventChannel.emit("account", this.data.account);
+                res.eventChannel.emit("bookBorrowedLimit", this.data.bookBorrowedLimit);
+            }
+        })
+    },
+    bookBorrowedDetail(x) {
+        let book = this.data.borrowedBookList[x.currentTarget.dataset.index];
+        this.gotoBookDetail(book);
+    },
+    bookSearchDetail(x) {
+        let book = this.data.searchBookList[x.currentTarget.dataset.index];
+        this.gotoBookDetail(book);
     },
     async onLoad() {
         wx.cloud.init();
-        let quotes = await getQuotes();
         getBookLimit().then((val) => {
             this.setData({
                 bookBorrowedLimit: val,
@@ -64,7 +89,6 @@ Page({
             });
         })
         this.setData({
-            username: "Michel",
             generalTimeOfDayDescription: getGeneralTimeOfDayDescription(),
         });
 
@@ -75,6 +99,9 @@ Page({
                     url: '/pages/loginPage/loginPage',
                 })
             } else {
+                this.setData({
+                    account: account,
+                });
                 this.generateBorrowedBookList();
             }
         });

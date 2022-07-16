@@ -16,7 +16,7 @@
                 <view class="book-content-list">
                     <block wx:for="{{borrowedBookList}}">
                         <view wx:if="{{index !== 0}}" class="book-list-separator"></view>
-                        <view class="book-item">
+                        <view class="book-item" bindtap="bookBorrowedDetail" data-index="{{index}}">
                             <view class="book-item-left">
                                 <text class="book-item-title">{{item.title}}</text>
                                 <text class="book-item-author">{{item.author}}</text>
@@ -31,21 +31,23 @@
             </view>
         </block>
         <block wx:if="{{searchFocused === true}}">
-            <view class="book-content-list">
-                <block wx:for="{{searchBookList}}">
-                    <view wx:if="{{index !== 0}}" class="book-list-separator"></view>
-                    <view class="book-item">
-                        <view class="book-item-left">
-                            <text class="book-item-title">{{item.title}}</text>
-                            <text class="book-item-author">{{item.author}}</text>
+            <scroll-view id="search-book-list" scroll-y="true" enhanced="true" bounces="true">
+                <view id="search-book-list-inner">
+                    <block wx:for="{{searchBookList}}">
+                        <view wx:if="{{index !== 0}}" class="book-list-separator"></view>
+                        <view class="book-item" bindtap="bookSearchDetail" data-index="{{index}}">
+                            <view class="book-item-left">
+                                <text class="book-item-title">{{item.title}}</text>
+                                <text class="book-item-author">{{item.author}}</text>
+                            </view>
+                            <view class="book-item-right">
+                                <text class="book-owner">{{item.borrowedUser === null ? "可供租借" : ((account._id === item.borrowedUser ? "您" : item.borrowedUserWxName)+"已借")}}</text>
+                                <image class="list-chevron-right" src="/icons/chevron-right.svg" />
+                            </view>
                         </view>
-                        <view class="book-item-right">
-                            <text class="warn-book-overtime" wx:if="{{item.isOvertimeValue === true}}">记得还书！</text>
-                            <image class="list-chevron-right" src="/icons/chevron-right.svg" />
-                        </view>
-                    </view>
-                </block>
-            </view>
+                    </block>
+                </view>
+            </scroll-view>
         </block>
     </view>
     <view id="footer">

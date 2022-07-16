@@ -110,6 +110,21 @@ export async function getBooks() {
     }
 }
 
+export async function updateBook(id) {
+    if (useDatabase) {
+        let database = wx.cloud.database();
+        let data = await database.collection("bookData").doc(id).get();
+        let newBooks = getBooks();
+        for (let i=0;i<newBooks.length;i++) {
+            if (newBooks[i]._id === id) {
+                newBooks[i] = data.data;
+            }
+        }
+        databaseCache.books = newBooks;
+        booksCache[id] = data.data;
+    }
+}
+
 export async function createAccount(wxName) {
     if (useDatabase) {
         let newAccount = {

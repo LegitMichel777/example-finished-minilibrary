@@ -1,7 +1,8 @@
 {
   "pages":[
     "pages/index/index",
-    "pages/loginPage/loginPage"
+    "pages/loginPage/loginPage",
+    "pages/detail/detail"
   ],
   "window":{
     "backgroundTextStyle":"light",

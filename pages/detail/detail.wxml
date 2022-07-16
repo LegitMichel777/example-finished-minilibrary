@@ -1,0 +1,19 @@
+<view class="detail-master-container">
+    <text class="title">{{book.title}}</text>
+    <view class="book-properties">
+        <view class="book-property" wx:if="{{book.author !== null}}">
+            <text class="book-property-title">作者</text>
+            <text class="book-property-value">{{book.author}}</text>
+        </view>
+        <view class="book-property" wx:if="{{book.publisher !== null}}">
+            <text class="book-property-title">出版社</text>
+            <text class="book-property-value">{{book.publisher}}</text>
+        </view>
+        <view class="book-property" wx:if="{{book.isbn !== null}}">
+            <text class="book-property-title">ISBN</text>
+            <text class="book-property-value">{{book.isbn}}</text>
+        </view>
+    </view>
+    <view class="rent-button rent-button-enabled" bindtap="borrowBook">租借</view>
+    <text class="rent-button-error" wx:if="{{account.booksBorrowed.length>=bookBorrowedLimit}}">您的租借数量已达到上限</text>
+</view>

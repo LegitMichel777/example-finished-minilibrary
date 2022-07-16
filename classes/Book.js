@@ -10,13 +10,14 @@ export class Book {
         }
         return false;
     }
-    constructor(id, isbn, title, author, publisher, borrowedUser, myBorrowedTime) {
+    constructor(id, isbn, title, author, publisher, borrowedUser, borrowedUserWxName, myBorrowedTime) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.borrowedUser = borrowedUser;
+        this.borrowedUserWxName = borrowedUserWxName;
         this.myBorrowedTime = myBorrowedTime;
         this.isOvertimeValue = this.isOvertime();
     } 
