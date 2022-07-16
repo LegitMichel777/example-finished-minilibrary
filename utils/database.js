@@ -95,6 +95,10 @@ export function getBook(_id) {
     return booksCache[_id];
 }
 
+export function updateCacheForBook(_id, book) {
+    booksCache[_id] = book;
+}
+
 export async function getBooks() {
     if (useDatabase) {
         if (databaseCache.books !== undefined) {
