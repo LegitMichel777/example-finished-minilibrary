@@ -97,9 +97,23 @@ Page({
             let request = getRequest.data[0];
             // approve the request
             console.log(request);
-            // wx.cloud.callFunction({
-
-            // })
+            wx.cloud.callFunction({
+                name: "approveReturn",
+                data: {
+                    returnRequest: request,
+                },
+            }).then((res) => {
+                if (res.result.status === "fail") {
+                    let reason = res.result.reason;
+                    if (reason === "alreadyReturned") {
+                        this.scanFailure("书已还");
+                    } else if (reason === "noAdmin") {
+                        this.scanFailure("您不是管理员");
+                    } else {
+                        this.scanFailure("服务端出现未知错误");
+                    }
+                }
+            })
 
         } else {
             this.scanFailure("扫码错误");
@@ -107,8 +121,9 @@ Page({
         }
     },
     scanCode() {
-        this.handleCode("jqLarTy0607WC");
-        return;
+        // this.handleCode("jqLarQ7_uu4KR");
+        // return;
+
         wx.scanCode({
             onlyFromCamera: true,
             success: async (res) => {
@@ -137,7 +152,6 @@ Page({
                 res.eventChannel.emit("account", this.data.account);
                 res.eventChannel.emit("bookBorrowedLimit", this.data.bookBorrowedLimit);
                 res.eventChannel.on("update", (newAccount) => {
-                    console.log("yeah!");
                     this.setData({
                         account: newAccount,
                     });
