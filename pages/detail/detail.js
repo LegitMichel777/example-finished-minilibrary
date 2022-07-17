@@ -20,6 +20,7 @@ Component({
         borrowButtonText: "",
         borrowButtonEnabled: false,
         borrowButtonMode: null,
+        successText: null,
     },
 
     /**
@@ -43,13 +44,14 @@ Component({
                     this.setData({
                         borrowButtonMode: "return-book",
                         borrowButtonEnabled: true,
-                        borrowButtonText: "还书"
+                        borrowButtonText: "还书",
                     });
                 } else {
                     this.setData({
                         borrowButtonMode: "other-have-book",
                         borrowButtonEnabled: false,
                         borrowButtonText: `${this.data.book.borrowedUserWxName}已借`,
+                        successText: null,
                     });
                 }
             } else {
@@ -58,14 +60,15 @@ Component({
                     this.setData({
                         borrowButtonMode: "cannot-borrow-maxed-out",
                         borrowButtonEnabled: false,
-                        borrowButtonText: "租借"
+                        borrowButtonText: "租借",
+                        successText: null,
                     });
                 } else {
                     // i can borrow!
                     this.setData({
                         borrowButtonMode: "borrow-book",
                         borrowButtonEnabled: true,
-                        borrowButtonText: "租借"
+                        borrowButtonText: "租借",
                     });
                 }
             }
@@ -104,7 +107,6 @@ Component({
                         book: this.data.book._id,
                     }
                 }).then((res) => {
-                    console.log(res);
                     if (res.result.status === "success") {
                         this.data.account.booksBorrowed.push(this.data.book._id);
                         let newBook = this.data.book;
@@ -112,6 +114,7 @@ Component({
                         newBook.borrowedUserWxName = this.data.account.wxName;
                         this.setData({
                             book: newBook,
+                            successText: "已成功租借！"
                         });
                         updateCacheForBook(newBook._id, newBook);
                         this.refreshBorrowedButtonStatus();
@@ -131,6 +134,25 @@ Component({
                             success: (res) => {
                                 res.eventChannel.emit("returnId", requestId);
                                 res.eventChannel.emit("book", this.data.book);
+                                res.eventChannel.emit("userId", this.data.account._id);
+                                res.eventChannel.on("update", (newAccount) => {
+                                    this.setData({
+                                        account: newAccount,
+                                    });
+                                    this.refreshBorrowedButtonStatus();
+                                })
+                                res.eventChannel.on("success", (data) => {
+                                    if (data === true) {
+                                        let newBook = this.data.book;
+                                        newBook.borrowedUser = null;
+                                        newBook.borrowedUserWxName = null;
+                                        this.setData({
+                                            book: newBook,
+                                            successText: "已成功还书！"
+                                        });
+                                        this.refreshBorrowedButtonStatus();
+                                    }
+                                })
                             }                            
                         })
                     }

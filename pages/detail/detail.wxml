@@ -15,5 +15,6 @@
         </view>
     </view>
     <view class="rent-button rent-button-{{borrowButtonEnabled ? 'enabled' : 'disabled'}}" bindtap="borrowBook">{{borrowButtonText}}</view>
-    <text class="rent-button-error" wx:if="{{borrowButtonMode === 'cannot-borrow-maxed-out'}}">您的租借数量已达到上限</text>
+    <text class="rent-button-subtext rent-button-subtext-error" wx:if="{{borrowButtonMode === 'cannot-borrow-maxed-out'}}">您的租借数量已达到上限</text>
+    <text class="rent-button-subtext rent-button-subtext-success" wx:if="{{successText !== null}}">{{successText}}</text>
 </view>

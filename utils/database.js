@@ -34,23 +34,16 @@ export async function getQuotes() {
 
 export async function getAccount() {
     if (useDatabase) {
-        if (databaseCache.account !== undefined) {
-            return databaseCache.account;
+        let value;
+        let account = await wx.cloud.callFunction({
+            name: "getAccount",
+        });
+        if (account.result.res === undefined) {
+            value = null;
         } else {
-            let value;
-            let database = wx.cloud.database();
-            let account = await wx.cloud.callFunction({
-                name: "getAccount",
-            });
-            // console.log(account);
-            if (account.result.res === undefined) {
-                value = null;
-            } else {
-                value = account.result.res;
-            }
-            databaseCache.account = value;
-            return value;
+            value = account.result.res;
         }
+        return value;
     } else {
         return [{"title": "\u5434\u59d0\u59d0\u8bb2\u5386\u53f2\u6545\u4e8b\u7b2c4\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
         {"title": "\u5434\u59d0\u59d0\u8bb2\u5386\u53f2\u6545\u4e8b\u7b2c15\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
@@ -67,12 +60,6 @@ export async function getAccount() {
         {"title": "\u5434\u59d0\u59d0\u8bb2\u6545\u4e8b\u7b2c15\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
         {"title": "\u5434\u59d0\u59d0\u8bb2\u6545\u4e8b\u7b2c11\u518c", "author": "\u5434\u6db5\u78a7", "publisher": "\u65b0\u4e16\u754c\u51fa\u7248\u793e", "isbn": "", "borrowedUser": null, "borrowedUserWxName": null, "borrowedTime": null},
         ]
-    }
-}
-
-export async function getAccountCached() {
-    if (useDatabase) {
-        return databaseCache.account;
     }
 }
 

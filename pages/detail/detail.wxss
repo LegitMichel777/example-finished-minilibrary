@@ -48,8 +48,13 @@
     background-color: #C8C9D1;
     color: #4F4E53;
 }
-.rent-button-error {
-    font-weight: 700;
+.rent-button-subtext {
+    font-weight: 500;
     margin-top: 11px;
+}
+.rent-button-subtext-error {
     color: #FF3B30;
+}
+.rent-button-subtext-success {
+    color: #34C759;
 }

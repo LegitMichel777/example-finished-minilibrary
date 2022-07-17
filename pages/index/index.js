@@ -1,12 +1,12 @@
 import { Book } from "../../classes/Book"
 import { getGeneralTimeOfDayDescription } from "../../utils/util";
-import { getAccount, getAccountCached, getBook, getBookLimit, getBooks, getBooksCached, getQuotes } from "../../utils/database";
+import { getAccount, getBook, getBookLimit, getBooks, getBooksCached, getQuotes } from "../../utils/database";
 import { searchBooks } from "../../utils/search";
 const app = getApp()
 
 Page({
     data: {
-        account: null,
+        account: undefined,
         generalTimeOfDayDescription: "",
         bookBorrowedLimit: 0,
         footerInspirationText: "",
@@ -18,7 +18,7 @@ Page({
     },
     async generateBorrowedBookList() {
         let books = await getBooksCached();
-        let account = await getAccountCached();
+        let account = this.data.account;
         if (books === undefined || account === undefined) {
             return
         }
@@ -43,7 +43,6 @@ Page({
         this.setData({
             searchText: value,
         });
-        console.log(this.data.searchText);
         this.updateSearch();
     },
     searchFocus() {
@@ -96,7 +95,6 @@ Page({
             }
             let request = getRequest.data[0];
             // approve the request
-            console.log(request);
             wx.cloud.callFunction({
                 name: "approveReturn",
                 data: {
