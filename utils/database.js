@@ -95,8 +95,20 @@ export function getBook(_id) {
     return booksCache[_id];
 }
 
+function updateBookCacheBasedOnBooksCache(_id) {
+    // updates the 'books' cache based on the 'booksCache' for a specific book. used for individual book updates
+    for (let i=0;i<databaseCache.books.length;i++) {
+        if (databaseCache.books[i]._id === _id) {
+            console.log("Updating", _id, "to", booksCache[_id]);
+            databaseCache.books[i] = booksCache[_id];
+            return;
+        }
+    }
+}
+
 export function updateCacheForBook(_id, book) {
     booksCache[_id] = book;
+    updateBookCacheBasedOnBooksCache(_id);
 }
 
 export async function getBooks() {
@@ -118,14 +130,8 @@ export async function updateBook(id) {
     if (useDatabase) {
         let database = wx.cloud.database();
         let data = await database.collection("bookData").doc(id).get();
-        let newBooks = getBooks();
-        for (let i=0;i<newBooks.length;i++) {
-            if (newBooks[i]._id === id) {
-                newBooks[i] = data.data;
-            }
-        }
-        databaseCache.books = newBooks;
         booksCache[id] = data.data;
+        updateBookCacheBasedOnBooksCache(id);
     }
 }
 

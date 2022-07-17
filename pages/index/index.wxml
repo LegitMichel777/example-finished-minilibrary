@@ -2,7 +2,7 @@
     <view id="main-top-content">
         <view id="main-header">
             <text class="title">{{generalTimeOfDayDescription}}好，来看书吧！</text>
-            <view id="main-code-scan-icon">
+            <view id="main-code-scan-icon" bindtap="scanCode">
                 <image id="main-code-scan-icon-img" src="/icons/code-icon.svg" />
             </view>
         </view>

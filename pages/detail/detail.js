@@ -97,7 +97,6 @@ Component({
             })
         },
         borrowBook: function() {
-            // TODO: react to book change
             if (this.data.borrowButtonMode === "borrow-book" || this.data.borrowButtonMode === "other-have-book") {
                 wx.cloud.callFunction({
                     name: "borrowBook",
@@ -106,12 +105,12 @@ Component({
                     }
                 }).then((res) => {
                     console.log(res);
-                    if (res.result === "success") {
+                    if (res.result.status === "success") {
                         this.data.account.booksBorrowed.push(this.data.book._id);
                         let newBook = this.data.book;
                         newBook.borrowedUser = this.data.account._id;
                         newBook.borrowedUserWxName = this.data.account.wxName;
-                        this.data.setData({
+                        this.setData({
                             book: newBook,
                         });
                         updateCacheForBook(newBook._id, newBook);
@@ -119,12 +118,28 @@ Component({
                     }
                 });
             } else if (this.data.borrowButtonMode === "return-book") {
-
+                wx.cloud.callFunction({
+                    name: "requestReturn",
+                    data: {
+                        book: this.data.book._id,
+                    }
+                }).then((res) => {
+                    if (res.result.status === "success") {
+                        let requestId = res.result.res;
+                        wx.navigateTo({
+                            url: "/pages/confirmReturn/confirmReturn",
+                            success: (res) => {
+                                res.eventChannel.emit("returnId", requestId);
+                                res.eventChannel.emit("book", this.data.book);
+                            }                            
+                        })
+                    }
+                })
             }
         },
         onUnload: function() {
             const eventChannel = this.getOpenerEventChannel();
-            eventChannel.emit("update");
+            eventChannel.emit("update", this.data.account);
         }
     }
 })

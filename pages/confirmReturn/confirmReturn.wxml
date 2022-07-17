@@ -1,0 +1,5 @@
+<view id="confirm-return-master-container">
+    <text class="title">您在归还：{{book.title}}</text>
+    <canvas class="return-code-canvas" canvas-id="returnCodeCanvas"></canvas>
+    <text>让管理员扫码以完成还书</text>
+</view>

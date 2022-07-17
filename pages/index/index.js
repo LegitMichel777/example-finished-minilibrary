@@ -14,6 +14,7 @@ Page({
         searchBookList: [],
         searchFocused: false,
         searchText: "",
+        isAdmin: false,
     },
     async generateBorrowedBookList() {
         let books = await getBooksCached();
@@ -58,6 +59,76 @@ Page({
             });
         }
     },
+    scanFailure(reason) {
+        wx.navigateTo({
+            url: '/pages/scanFailure/scanFailure',
+            success: (res) => {
+                res.eventChannel.emit("errorDetail", reason);
+            }
+        })
+    },
+    async handleCode(code) {
+        if (code.length<5) {
+            this.scanFailure("扫码错误");
+            return;
+        }
+        let beginningIdentifier = code.substr(0,3);
+        if (beginningIdentifier !== "jqL") {
+            this.scanFailure("扫码错误");
+            return;
+        }
+        code = code.substr(3);
+        let versionIdentifier = code[0];
+        if (versionIdentifier !== 'a') {
+            this.scanFailure("请更新久牵图书馆！");
+            return;
+        }
+        code = code.substr(1);
+        let codeAction = code[0];
+        code = code.substr(1);
+        if (codeAction === "r") {
+            let database = wx.cloud.database();
+            let returnBookRequest = code;
+            let getRequest = await database.collection("returnRequests").where({_id: returnBookRequest}).get();
+            if (getRequest.data.length === 0) {
+                this.scanFailure("还书码已过期！");
+                return;
+            }
+            let request = getRequest.data[0];
+            // approve the request
+            console.log(request);
+            // wx.cloud.callFunction({
+
+            // })
+
+        } else {
+            this.scanFailure("扫码错误");
+            return;
+        }
+    },
+    scanCode() {
+        this.handleCode("jqLarTy0607WC");
+        return;
+        wx.scanCode({
+            onlyFromCamera: true,
+            success: async (res) => {
+                if (res.scanType === "QR_CODE") {
+                    // handle the code
+                    if (this.data.isAdmin) {
+                        let code = res.result;
+                        this.handleCode(code);
+                    } else {
+                        this.scanFailure("您不是管理员");
+                        return;
+                    }
+                } else {
+                    // handle the ISBN
+                }
+            }, fail(res) {
+              console.error(res);
+            }
+        });
+    },
     gotoBookDetail(book) {
         wx.navigateTo({
             url: "/pages/detail/detail",
@@ -65,6 +136,14 @@ Page({
                 res.eventChannel.emit("book", book);
                 res.eventChannel.emit("account", this.data.account);
                 res.eventChannel.emit("bookBorrowedLimit", this.data.bookBorrowedLimit);
+                res.eventChannel.on("update", (newAccount) => {
+                    console.log("yeah!");
+                    this.setData({
+                        account: newAccount,
+                    });
+                    this.generateBorrowedBookList();
+                    this.updateSearch();
+                }) 
             }
         })
     },
@@ -93,12 +172,23 @@ Page({
         });
 
         // check for account
-        getAccount().then((account) => {
+        getAccount().then(async (account) => {
             if (account === null) {
                 wx.redirectTo({
                     url: '/pages/loginPage/loginPage',
                 })
             } else {
+                let database = wx.cloud.database();
+                let admins = await database.collection("constants").doc("admins").get();
+                if (admins.data.value.indexOf(account._id) === -1) {
+                    this.setData({
+                        isAdmin: false,
+                    });
+                } else [
+                    this.setData({
+                        isAdmin: true,
+                    })
+                ]
                 this.setData({
                     account: account,
                 });

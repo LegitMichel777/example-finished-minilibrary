@@ -1,0 +1,22 @@
+/* pages/confirmReturn/confirmReturn.wxss */
+#confirm-return-master-container {
+    min-height: 100vh;
+    width: 100vw;
+    background-color: #F2F1F6;
+    box-sizing: border-box;
+    padding-bottom: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#confirm-return-master-container .title {
+    text-align: center;
+    margin: 0 51px;
+}
+.return-code-canvas {
+    width: 178px;
+    height: 178px;
+    margin-bottom: 17px;
+    margin-top: 17px;
+}

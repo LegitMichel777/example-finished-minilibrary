@@ -2,7 +2,9 @@
   "pages":[
     "pages/index/index",
     "pages/loginPage/loginPage",
-    "pages/detail/detail"
+    "pages/detail/detail",
+    "pages/confirmReturn/confirmReturn",
+    "pages/scanFailure/scanFailure"
   ],
   "window":{
     "backgroundTextStyle":"light",

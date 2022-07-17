@@ -26,6 +26,7 @@ export function cutStringToSearchTokens(s) {
 }
 export async function searchBooks(searchString) {
     let data = await getBooks();
+    console.log(data);
     if (data === undefined) {
         return [];
     }

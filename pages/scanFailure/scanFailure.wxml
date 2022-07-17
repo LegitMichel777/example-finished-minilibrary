@@ -1,0 +1,7 @@
+<view id="scan-failure-view">
+    <view id="scan-failure-text">
+        <text class="title">扫码失败</text>
+        <text id="scan-failure-reason">{{errorDetail}}</text>
+    </view>
+    <view id="scan-failure-ok-button" bindtap="okTapped">知道了</view>
+</view>
