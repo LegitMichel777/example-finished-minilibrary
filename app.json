@@ -9,7 +9,7 @@
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#F2F1F6",
-    "navigationBarTitleText": "图书馆借书",
+    "navigationBarTitleText": "久牵图书馆",
     "navigationBarTextStyle":"black"
   },
   "style": "v2",

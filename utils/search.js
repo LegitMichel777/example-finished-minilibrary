@@ -64,6 +64,8 @@ export async function searchBooks(searchString) {
                 result.push(data[i]);
             }
         }
+    } else if (searchString !== "") {
+        result = data;
     }
     const limitItems=50;
     if (result.length>limitItems) {
